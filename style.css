@@ -1,0 +1,12 @@
+.font-style{
+    font-family: "Inter", sans-serif;
+}
+
+.font-bd{
+     font-family: "Noto Sans Bengali", sans-serif;
+}
+
+.active{
+background-color: #15803D;
+color: white;
+}
