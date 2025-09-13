@@ -1,3 +1,15 @@
+
+// spinner section////
+
+const showSpinner = () => {
+  document.getElementById("spinner").classList.remove("hidden");
+};
+
+const hideSpinner = () => {
+  document.getElementById("spinner").classList.add("hidden");
+};
+
+
 const loadFetch =()=>{
 
     fetch("https://openapi.programming-hero.com/api/categories")
@@ -8,13 +20,15 @@ const loadFetch =()=>{
 
 
 const loadPlants = ()=>{
+    showSpinner()
 
      const urls = `https://openapi.programming-hero.com/api/plants`
      fetch(urls)
     .then((plants)=> plants.json())
-    .then((allPlants)=> displayFruit(allPlants.plants)
-     )
-    
+    .then((allPlants)=> {displayFruit(allPlants.plants);
+     hideSpinner();
+})
+    .catch(() => hideSpinner());
 }
 
 const removeActive = () =>{
@@ -69,6 +83,8 @@ const displayDetails=(pDetail)=>{
 
 
 const loadData=(id)=>{
+showSpinner();
+
 const url = `https://openapi.programming-hero.com/api/category/${id}`;
   
   fetch(url)
@@ -87,11 +103,12 @@ const url = `https://openapi.programming-hero.com/api/category/${id}`;
     activeCategory.classList.add("active");
 
     displayFruit(completeOne.plants);
+    hideSpinner();
 
   }
   )
 
-
+.catch(() => hideSpinner());
 }
 
 // ////////////  cart///////////
@@ -117,7 +134,7 @@ const updateCartUI = () => {
 
   cart.forEach((item, index) => {
     const div = document.createElement("div");
-    div.className = "flex justify-between items-center p-2 border-b";
+    div.className = "flex justify-between items-center p-3 border-b";
 
     div.innerHTML = `
       <div>
