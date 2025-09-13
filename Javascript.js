@@ -25,7 +25,7 @@ const removeActive = () =>{
 };
 
 
-
+// Modal section////
 
 const loadDetails = async (idd) => {
 const urlD= `https://openapi.programming-hero.com/api/plant/${idd}`
@@ -64,12 +64,7 @@ const displayDetails=(pDetail)=>{
     
     `
 
- 
-    
-
-    document.getElementById("myModal").showModal();
-
-    
+    document.getElementById("myModal").showModal();  
 }
 
 
@@ -99,6 +94,66 @@ const url = `https://openapi.programming-hero.com/api/category/${id}`;
 
 }
 
+// ////////////  cart///////////
+
+
+let cart = [];
+let total = 0;
+
+const updateCartUI = () => {
+  const cartBody = document.getElementById("cart-body");
+  const cartContainer = document.getElementById("cart");
+  const cartTotal = document.getElementById("cart-total");
+
+  cartContainer.innerHTML = "";
+
+  if (cart.length === 0) {
+    cartBody.classList.add("hidden");
+    cartTotal.innerText = 0;
+    return;
+  }
+
+  cartBody.classList.remove("hidden");
+
+  cart.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "flex justify-between items-center p-2 border-b";
+
+    div.innerHTML = `
+      <div>
+        <h2 class="font-semibold">${item.name}</h2>
+        <p>৳ ${item.price}</p>
+      </div>
+      <div class="cursor-pointer text-red-500">
+        <i class="fa-solid fa-xmark"></i>
+      </div>
+    `;
+
+    // Remove item when clicking X
+    div.querySelector("i").addEventListener("click", () => {
+      total -= item.price;
+      cart.splice(index, 1);
+      updateCartUI();
+    });
+
+    cartContainer.appendChild(div);
+  });
+
+  cartTotal.innerText = total;
+};
+
+// Clear cart button
+document.getElementById("clear-cart").addEventListener("click", () => {
+  cart = [];
+  total = 0;
+  updateCartUI();
+});
+
+
+
+
+
+
 const displayFruit=(fruit)=>{
    
 const cardContainer = document.getElementById("card-container")
@@ -125,14 +180,14 @@ createNew.innerHTML=`
     </div>
 
     <div class="flex-1">
-        <h3 onclick="loadDetails(${allFruit.id})" class="font-bold mt-2">${allFruit.name}</h3>
+        <h3 onclick="loadDetails(${allFruit.id})" class="font-bold mt-2 names">${allFruit.name}</h3>
         <p class="text-xs line-clamp-3">${allFruit.description}</p>
           
       <div class="flex justify-between items-center mt-1 pb-2">
         <button class="bg-[#DCFCE7] p-1 rounded-xl text-sm mt-1" >${allFruit.category}</button>
-         <p class="font-bold"> <span class="font-bd font-bold">৳</span>${allFruit.price}</p>
+         <p class="font-bold pr"> <span class="font-bd font-bold ">৳</span>${allFruit.price}</p>
         </div>
-  <button class="btn w-full rounded-xl mt-2 bg-[#15803D] text-white mt-auto">Add To Cart</button>
+  <button class="btn w-full rounded-xl mt-2 bg-[#15803D] text-white mt-auto btns">Add To Cart</button>
 
     </div>
 
@@ -140,7 +195,24 @@ createNew.innerHTML=`
 
   </div>
   
-`
+`;
+
+  const btn = createNew.querySelector(".btns");
+    btn.addEventListener("click", () => {
+      const name = allFruit.name;
+      const price = Number(allFruit.price);
+
+      // Add to cart array
+      cart.push({ name, price });
+      total += price;
+
+      // Update UI
+      updateCartUI();
+    });
+
+
+
+
 
  cardContainer.append(createNew)
  });
@@ -153,7 +225,7 @@ const displayCategory = (displays) => {
 
 const categoryContainer = document.getElementById("category-container")
 // categoryContainer.innerHTML="";
- categoryContainer.className = "flex flex-col gap-3 ";
+ categoryContainer.className = "flex flex-col gap-3 ml-40 lg:flex lg:flex-col lg:-ml-1 ";
 
 for(const display of displays ){
 
@@ -162,7 +234,7 @@ for(const display of displays ){
    
     
 
-   <p id="activeCategory-${display.id}" onclick="loadData(${display.id})" class=" hover:bg-[#15803D] hover:text-white w-35 rounded-sm  removeA  p-1 bg- "> ${display.category_name}</p>
+   <p id="activeCategory-${display.id}" onclick="loadData(${display.id})" class=" hover:bg-[#15803D] hover:text-white w-35 rounded-sm  removeA  p-1 "> ${display.category_name}</p>
 
 
    `
@@ -174,3 +246,9 @@ for(const display of displays ){
 loadFetch()
 
 loadPlants()
+
+
+
+
+
+
